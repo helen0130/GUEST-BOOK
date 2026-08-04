@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>하선율의 첫 번째 생일 방명록 🎵</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22>🎵</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  #configBanner{ display:none; }
+  :root{
+    --ivory:#FBF3E9;
+    --card:#FFFDF9;
+    --ink:#4A3B32;
+    --ink-soft:#93816F;
+    --rose:#E4949B;
+    --rose-deep:#D97C86;
+    --stripe-1:#F2BFC4;
+    --stripe-2:#F5DFA0;
+    --stripe-3:#BFE3C7;
+    --stripe-4:#BFD6EA;
+    --stripe-5:#E3C9EE;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:'Gowun Dodum', sans-serif;
+    background:var(--ivory);
+    color:var(--ink);
+  }
+  .font-display{ font-family:'Gowun Batang', serif; }
+
+  .tteok-stripe{
+    display:flex;
+    width:100%;
+    height:8px;
+  }
+  .tteok-stripe > div{ flex:1; }
+
+  .blob{
+    position:absolute;
+    border-radius:9999px;
+    filter:blur(30px);
+    opacity:.55;
+    pointer-events:none;
+  }
+
+  @keyframes cardIn{
+    from{ opacity:0; transform:translateY(-14px) scale(.95); }
+    to{ opacity:1; transform:translateY(0) scale(1); }
+  }
+  @media (prefers-reduced-motion: no-preference){
+    .card-enter{ animation:cardIn .5s cubic-bezier(.34,1.56,.64,1) both; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .card-enter{ animation:none; }
+  }
+
+  @keyframes heartPop{
+    0%{ transform:scale(1); }
+    35%{ transform:scale(1.35); }
+    60%{ transform:scale(.92); }
+    100%{ transform:scale(1); }
+  }
+  .heart-pop{ animation:heartPop .4s ease; }
+
+  @keyframes toastIn{
+    from{ opacity:0; transform:translate(-50%, 10px); }
+    to{ opacity:1; transform:translate(-50%, 0); }
+  }
+  #toast{ animation:toastIn .25s ease; }
+
+  textarea{ resize:none; }
+
+  ::selection{ background:var(--stripe-1); }
+
+  .btn-press:active{ transform:scale(.96); }
+
+  input:focus, textarea:focus{
+    outline:none;
+    box-shadow:0 0 0 3px rgba(228,148,155,.35);
+  }
+</style>
+</head>
+<body class="min-h-screen">
+
+  <!-- decorative background blobs (desktop framing) -->
+  <div class="fixed inset-0 -z-10 overflow-hidden">
+    <div class="blob w-72 h-72 -top-10 -left-16" style="background:var(--stripe-3);"></div>
+    <div class="blob w-72 h-72 top-40 -right-20" style="background:var(--stripe-1);"></div>
+    <div class="blob w-72 h-72 bottom-0 left-10" style="background:var(--stripe-4);"></div>
+  </div>
+
+  <div id="configBanner" class="bg-[#FFF4E5] text-[#8A5A22] text-[12px] text-center px-4 py-2 leading-relaxed">
+    ⚠️ 관리자 전용 안내: 아직 GitHub 설정이 완료되지 않아 방명록이 모두에게 공유되지 않고 이 기기에만 저장돼요.<br>
+    코드 안의 <code>githubConfig</code> 값을 채워주세요.
+  </div>
+
+  <div class="max-w-md mx-auto min-h-screen bg-[var(--ivory)] shadow-[0_0_60px_rgba(0,0,0,0.06)] relative">
+
+    <!-- rainbow tteok ribbon -->
+    <div class="tteok-stripe">
+      <div style="background:var(--stripe-1)"></div>
+      <div style="background:var(--stripe-2)"></div>
+      <div style="background:var(--stripe-3)"></div>
+      <div style="background:var(--stripe-4)"></div>
+      <div style="background:var(--stripe-5)"></div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="px-6 pt-9 pb-6 text-center relative">
+      <div class="text-3xl mb-2" aria-hidden="true">🎵 🎂 🎵</div>
+      <h1 class="font-display text-[26px] leading-snug font-bold text-[var(--ink)]">
+        하선율의 첫 번째 생일을<br>축하해 주세요
+      </h1>
+      <p class="mt-4 text-[15px] leading-relaxed text-[var(--ink-soft)]">
+        사랑스러운 선율이가 세상에 태어나<br>
+        첫 번째 생일을 맞이했습니다.<br>
+        선율이가 따뜻하고 건강한 아이로 자랄 수 있도록<br>
+        축하의 한마디를 남겨주세요!
+      </p>
+
+      <!-- utility buttons -->
+      <div class="flex justify-center gap-2 mt-6">
+        <button id="copyLinkBtn" type="button"
+          class="btn-press flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-medium border border-[var(--rose)] text-[var(--rose-deep)] bg-white/70 transition active:scale-95">
+          <span aria-hidden="true">🔗</span> 링크 복사하기
+        </button>
+        <button id="showQrBtn" type="button"
+          class="btn-press flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-medium border border-[var(--rose)] text-[var(--rose-deep)] bg-white/70 transition active:scale-95">
+          <span aria-hidden="true">▦</span> QR코드 보기
+        </button>
+      </div>
+    </header>
+
+    <!-- FORM -->
+    <section class="px-5">
+      <form id="guestForm" class="bg-[var(--card)] rounded-3xl p-5 shadow-sm border border-[#F2E7D8]">
+        <label class="block text-[13px] font-medium text-[var(--ink-soft)] mb-1.5" for="nameInput">
+          이름 (선율이와의 관계)
+        </label>
+        <input id="nameInput" name="name" type="text" maxlength="20" required
+          placeholder="예) 선율이 이모"
+          class="w-full px-4 py-2.5 rounded-xl border border-[#EEE1CF] bg-white text-[15px] placeholder:text-[#C9B8A6] mb-4 transition">
+
+        <label class="block text-[13px] font-medium text-[var(--ink-soft)] mb-1.5" for="messageInput">
+          축하 메시지
+        </label>
+        <textarea id="messageInput" name="message" rows="4" maxlength="300" required
+          placeholder="선율이의 첫 생일을 축하하는 따뜻한 한마디를 남겨주세요 :)"
+          class="w-full px-4 py-2.5 rounded-xl border border-[#EEE1CF] bg-white text-[15px] placeholder:text-[#C9B8A6] mb-4 transition"></textarea>
+
+        <button type="submit"
+          class="btn-press w-full py-3 rounded-full text-white font-semibold text-[15px] tracking-wide transition active:scale-[.98]"
+          style="background:var(--rose-deep);">
+          💌 축하 마음 전하기
+        </button>
+      </form>
+    </section>
+
+    <!-- DIVIDER -->
+    <div class="flex items-center gap-3 px-6 mt-9 mb-4">
+      <div class="flex-1 tteok-stripe rounded-full overflow-hidden">
+        <div style="background:var(--stripe-1)"></div>
+        <div style="background:var(--stripe-2)"></div>
+        <div style="background:var(--stripe-3)"></div>
+      </div>
+      <span class="text-[13px] font-medium text-[var(--ink-soft)] whitespace-nowrap">축하 메시지 🎵</span>
+      <div class="flex-1 tteok-stripe rounded-full overflow-hidden">
+        <div style="background:var(--stripe-3)"></div>
+        <div style="background:var(--stripe-4)"></div>
+        <div style="background:var(--stripe-5)"></div>
+      </div>
+    </div>
+
+    <!-- FEED -->
+    <section id="feedSection" class="px-5 pb-10">
+      <div id="messageFeed" class="flex flex-col gap-4"></div>
+    </section>
+
+    <footer class="text-center pb-8 pt-2">
+      <p class="text-[12px] text-[var(--ink-soft)]">선율이의 첫 생일을 축하해주셔서 감사합니다 ♡</p>
+    </footer>
+  </div>
+
+  <!-- QR MODAL -->
+  <div id="qrModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 px-8">
+    <div class="bg-white rounded-3xl p-6 max-w-xs w-full text-center relative shadow-xl">
+      <button id="closeQrBtn" type="button" aria-label="닫기"
+        class="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center text-[var(--ink-soft)] hover:bg-[var(--ivory)] transition">✕</button>
+      <p class="font-display text-lg font-bold mb-1">QR코드로 초대하기</p>
+      <p class="text-[13px] text-[var(--ink-soft)] mb-4">카메라로 스캔하면 방명록으로 바로 연결돼요</p>
+      <div class="bg-[var(--ivory)] rounded-2xl p-4 flex items-center justify-center">
+        <img id="qrImg" alt="방명록 페이지 QR 코드" width="200" height="200" class="rounded-lg">
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="hidden fixed bottom-8 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 rounded-full text-[13px] text-white shadow-lg" style="background:var(--ink);"></div>
+
+<script type="module">
+  // ============================================================
+  // GitHub 설정: 아래 값을 본인의 GitHub 저장소 정보로 교체하세요.
+  //
+  // 1) GitHub에 저장소를 만들고 (예: hasunyul-dol), 이 파일을 index.html로 올리세요.
+  // 2) 저장소 루트에 messages.json 파일을 만들고 내용은 [] 하나만 넣어 커밋하세요.
+  // 3) https://github.com/settings/personal-access-tokens/new 에서
+  //    Fine-grained token 발급 → Resource owner: 본인, Repository access:
+  //    "Only select repositories" → 이 저장소 선택 → Permissions에서
+  //    "Contents" 를 Read and write 로 설정 → 만료일은 짧게 (예: 30일) → 생성
+  // 4) 생성된 토큰을 아래 token 값에 붙여넣으세요.
+  //
+  // ⚠️ 이 토큰은 페이지 코드에 그대로 노출됩니다. 반드시 이 저장소 하나에만
+  //    쓰기 권한이 있는 fine-grained token을 쓰고, 행사가 끝나면 삭제하세요.
+  // ============================================================
+  const githubConfig = {
+    owner: "helen0130",
+    repo: "hasunyul-dol",
+    path: "messages.json",
+    branch: "main",
+    token: "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"
+  };
+
+  const isConfigured = githubConfig.token !== "YOUR_TOKEN";
+  const API_BASE = `https://api.github.com/repos/${encodeURIComponent(githubConfig.owner)}/${encodeURIComponent(githubConfig.repo)}/contents/${encodeURIComponent(githubConfig.path)}`;
+  const POLL_INTERVAL_MS = 20000; // 20초마다 새 메시지 확인 (ETag 사용, 변경 없으면 API 사용량 거의 0)
+
+  if(!isConfigured){
+    document.getElementById('configBanner').style.display = 'block';
+  }
+
+  const stripeColors = ['#F2BFC4', '#F5DFA0', '#BFE3C7', '#BFD6EA', '#E3C9EE'];
+  const LIKED_KEY = 'seonyul_dol_liked_ids_v1'; // 이 기기가 이미 좋아요 누른 메시지 id 목록
+  const LOCAL_FALLBACK_KEY = 'seonyul_dol_guestbook_local_v1'; // GitHub 설정 전 미리보기용
+
+  const feedEl = document.getElementById('messageFeed');
+  const formEl = document.getElementById('guestForm');
+  const nameInput = document.getElementById('nameInput');
+  const messageInput = document.getElementById('messageInput');
+
+  function getLikedIds(){
+    try{ return JSON.parse(localStorage.getItem(LIKED_KEY)) || []; }
+    catch(e){ return []; }
+  }
+  function markLiked(id){
+    const ids = getLikedIds();
+    if(!ids.includes(id)){
+      ids.push(id);
+      localStorage.setItem(LIKED_KEY, JSON.stringify(ids));
+    }
+  }
+
+  // ---- unicode-safe base64 helpers (GitHub Contents API stores base64) ----
+  function utf8ToBase64(str){
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+      (_, p1) => String.fromCharCode(parseInt(p1, 16))));
+  }
+  function base64ToUtf8(b64){
+    return decodeURIComponent(atob(b64.replace(/\n/g, '')).split('').map(c =>
+      '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+  }
+
+  // ---- local fallback storage (only used when GitHub isn't configured yet) ----
+  function loadLocalMessages(){
+    try{
+      const raw = localStorage.getItem(LOCAL_FALLBACK_KEY);
+      return raw ? JSON.parse(raw) : [];
+    }catch(e){
+      return [];
+    }
+  }
+  function saveLocalMessages(list){
+    try{ localStorage.setItem(LOCAL_FALLBACK_KEY, JSON.stringify(list)); }
+    catch(e){ /* storage unavailable, fail silently */ }
+  }
+
+  function formatTime(value){
+    const d = new Date(value || Date.now());
+    return d.toLocaleString('ko-KR', {
+      year:'numeric', month:'long', day:'numeric',
+      hour:'numeric', minute:'2-digit'
+    });
+  }
+
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function buildCard(msg, index, animate){
+    const stripe = stripeColors[index % stripeColors.length];
+    const liked = getLikedIds().includes(msg.id);
+    const card = document.createElement('article');
+    card.className = 'bg-[var(--card)] rounded-2xl border border-[#F2E7D8] overflow-hidden shadow-sm' + (animate ? ' card-enter' : '');
+    card.dataset.id = msg.id;
+
+    card.innerHTML = `
+      <div style="background:${stripe}" class="h-[6px] w-full"></div>
+      <div class="p-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-semibold text-[14px] text-[var(--ink)]">${escapeHtml(msg.name)}</span>
+          <span class="text-[11px] text-[var(--ink-soft)]">${formatTime(msg.time)}</span>
+        </div>
+        <p class="text-[14px] leading-relaxed whitespace-pre-wrap text-[var(--ink)] mb-3">${escapeHtml(msg.message)}</p>
+        <div class="flex justify-end">
+          <button type="button" class="like-btn flex items-center gap-1 px-3 py-1 rounded-full text-[13px] transition border ${liked ? 'border-[var(--rose-deep)] text-[var(--rose-deep)] bg-[#FDF0F1] pointer-events-none' : 'border-[#EEE1CF] text-[var(--ink-soft)]'}" ${liked ? 'disabled' : ''}>
+            <span class="heart-icon" aria-hidden="true">${liked ? '❤️' : '🤍'}</span>
+            <span class="like-count">${msg.likes || 0}</span>
+          </button>
+        </div>
+      </div>
+    `;
+    return card;
+  }
+
+  function renderEmptyState(){
+    const empty = document.createElement('div');
+    empty.className = 'text-center py-10 border border-dashed border-[#E7D6C1] rounded-2xl';
+    empty.innerHTML = `
+      <div class="text-3xl mb-2" aria-hidden="true">🎂</div>
+      <p class="text-[14px] text-[var(--ink-soft)]">아직 축하 메시지가 없어요.<br>첫 번째 축하를 남겨주세요!</p>
+    `;
+    feedEl.appendChild(empty);
+  }
+
+  function renderAll(messages){
+    feedEl.innerHTML = '';
+    if(!messages || messages.length === 0){
+      renderEmptyState();
+      return;
+    }
+    // 최신순 정렬 후 렌더 (time 내림차순)
+    const sorted = [...messages].sort((a, b) => new Date(b.time) - new Date(a.time));
+    sorted.forEach((msg, i) => {
+      feedEl.appendChild(buildCard(msg, i, false));
+    });
+  }
+
+  function showToast(text){
+    const toast = document.getElementById('toast');
+    toast.textContent = text;
+    toast.classList.remove('hidden');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toast.classList.add('hidden'), 2200);
+  }
+
+  function prependCard(newMsg){
+    const wasEmpty = feedEl.querySelector('.border-dashed');
+    if(wasEmpty) feedEl.innerHTML = '';
+    const card = buildCard(newMsg, 0, true);
+    feedEl.insertBefore(card, feedEl.firstChild);
+    Array.from(feedEl.children).forEach((el, i) => {
+      const bar = el.querySelector('div');
+      if(bar) bar.style.background = stripeColors[i % stripeColors.length];
+    });
+    return card;
+  }
+
+  // ================= SHARED (GitHub JSON file) MODE =================
+  if(isConfigured){
+    let lastEtag = null;
+    let cachedMessages = [];
+    let cachedSha = null;
+
+    async function fetchFile(useEtag){
+      const headers = { 'Accept': 'application/vnd.github+json' };
+      if(useEtag && lastEtag) headers['If-None-Match'] = lastEtag;
+
+      const res = await fetch(`${API_BASE}?ref=${githubConfig.branch}`, { headers: {
+        ...headers,
+        'Authorization': `Bearer ${githubConfig.token}`
+      }});
+
+      if(res.status === 304){
+        return null; // 변경 없음, API 사용량 거의 소모 안 함
+      }
+      if(!res.ok){
+        throw new Error(`GitHub 읽기 실패 (${res.status})`);
+      }
+      lastEtag = res.headers.get('ETag');
+      const data = await res.json();
+      cachedSha = data.sha;
+      let list = [];
+      try{ list = JSON.parse(base64ToUtf8(data.content)) || []; }
+      catch(e){ list = []; }
+      cachedMessages = list;
+      return list;
+    }
+
+    async function pollAndRender(){
+      try{
+        const list = await fetchFile(true);
+        if(list) renderAll(list);
+      }catch(e){
+        console.error(e);
+        // 폴링 실패는 조용히 넘어감 (다음 주기에 재시도)
+      }
+    }
+
+    async function writeFile(newList, commitMessage, attempt){
+      attempt = attempt || 1;
+      const body = {
+        message: commitMessage,
+        content: utf8ToBase64(JSON.stringify(newList, null, 2)),
+        sha: cachedSha,
+        branch: githubConfig.branch
+      };
+      const res = await fetch(API_BASE, {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/vnd.github+json',
+          'Authorization': `Bearer ${githubConfig.token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+
+      if(res.status === 409 && attempt <= 3){
+        // 다른 사람이 동시에 저장해서 sha 충돌 -> 최신본 다시 받아서 재시도
+        await fetchFile(false);
+        return writeFile(newList, commitMessage, attempt + 1);
+      }
+      if(!res.ok){
+        throw new Error(`GitHub 저장 실패 (${res.status})`);
+      }
+      const data = await res.json();
+      cachedSha = data.content.sha;
+      lastEtag = null; // 다음 폴링에서 새 내용을 확실히 받도록 초기화
+    }
+
+    // 최초 로딩
+    (async function init(){
+      try{
+        const list = await fetchFile(false);
+        renderAll(list || []);
+      }catch(e){
+        console.error(e);
+        showToast('메시지를 불러오지 못했어요. 설정을 확인해주세요.');
+        renderAll([]);
+      }
+    })();
+
+    setInterval(pollAndRender, POLL_INTERVAL_MS);
+
+    formEl.addEventListener('submit', async function(e){
+      e.preventDefault();
+      const name = nameInput.value.trim();
+      const message = messageInput.value.trim();
+      if(!name || !message) return;
+
+      const submitBtn = formEl.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+
+      try{
+        await fetchFile(false); // 최신 목록 + sha 확보
+        const newMsg = {
+          id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+          name, message,
+          time: new Date().toISOString(),
+          likes: 0
+        };
+        const updated = [newMsg, ...cachedMessages];
+        await writeFile(updated, `축하 메시지 추가: ${name}`);
+        cachedMessages = updated;
+        renderAll(updated);
+        formEl.reset();
+        showToast('축하 메시지가 등록되었어요 💌');
+      }catch(err){
+        console.error(err);
+        showToast('등록에 실패했어요. 잠시 후 다시 시도해주세요.');
+      }finally{
+        submitBtn.disabled = false;
+        nameInput.focus();
+      }
+    });
+
+    feedEl.addEventListener('click', async function(e){
+      const btn = e.target.closest('.like-btn');
+      if(!btn || btn.disabled) return;
+      const cardEl = btn.closest('article');
+      const id = cardEl.dataset.id;
+      if(getLikedIds().includes(id)) return;
+
+      btn.disabled = true;
+      try{
+        await fetchFile(false); // 최신 목록 + sha 확보
+        const updated = cachedMessages.map(m => m.id === id ? { ...m, likes: (m.likes || 0) + 1 } : m);
+        await writeFile(updated, `좋아요 +1`);
+        cachedMessages = updated;
+        markLiked(id);
+
+        const heartIcon = btn.querySelector('.heart-icon');
+        const likeCount = btn.querySelector('.like-count');
+        heartIcon.textContent = '❤️';
+        const msg = updated.find(m => m.id === id);
+        likeCount.textContent = msg ? msg.likes : '';
+        btn.classList.add('border-[var(--rose-deep)]', 'text-[var(--rose-deep)]', 'bg-[#FDF0F1]', 'pointer-events-none');
+        btn.classList.remove('border-[#EEE1CF]', 'text-[var(--ink-soft)]');
+        heartIcon.classList.remove('heart-pop');
+        void heartIcon.offsetWidth;
+        heartIcon.classList.add('heart-pop');
+      }catch(err){
+        console.error(err);
+        btn.disabled = false;
+        showToast('좋아요에 실패했어요.');
+      }
+    });
+
+  // ================= LOCAL FALLBACK MODE (GitHub 설정 전 미리보기) =================
+  } else {
+    formEl.addEventListener('submit', function(e){
+      e.preventDefault();
+      const name = nameInput.value.trim();
+      const message = messageInput.value.trim();
+      if(!name || !message) return;
+
+      const messages = loadLocalMessages();
+      const newMsg = {
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+        name, message,
+        time: new Date().toISOString(),
+        likes: 0
+      };
+      messages.unshift(newMsg);
+      saveLocalMessages(messages);
+      prependCard(newMsg);
+      formEl.reset();
+      nameInput.focus();
+    });
+
+    feedEl.addEventListener('click', function(e){
+      const btn = e.target.closest('.like-btn');
+      if(!btn || btn.disabled) return;
+      const cardEl = btn.closest('article');
+      const id = cardEl.dataset.id;
+      if(getLikedIds().includes(id)) return;
+
+      const messages = loadLocalMessages();
+      const msg = messages.find(m => m.id === id);
+      if(!msg) return;
+      msg.likes = (msg.likes || 0) + 1;
+      saveLocalMessages(messages);
+      markLiked(id);
+
+      btn.disabled = true;
+      btn.classList.add('border-[var(--rose-deep)]', 'text-[var(--rose-deep)]', 'bg-[#FDF0F1]', 'pointer-events-none');
+      btn.classList.remove('border-[#EEE1CF]', 'text-[var(--ink-soft)]');
+      const heartIcon = btn.querySelector('.heart-icon');
+      const likeCount = btn.querySelector('.like-count');
+      heartIcon.textContent = '❤️';
+      likeCount.textContent = msg.likes;
+      heartIcon.classList.remove('heart-pop');
+      void heartIcon.offsetWidth;
+      heartIcon.classList.add('heart-pop');
+    });
+
+    renderAll(loadLocalMessages());
+  }
+
+  // ---- copy link ----
+  document.getElementById('copyLinkBtn').addEventListener('click', async function(){
+    const url = window.location.href;
+    try{
+      await navigator.clipboard.writeText(url);
+      showToast('링크가 복사되었어요 🔗');
+    }catch(e){
+      showToast(url);
+    }
+  });
+
+  // ---- QR modal ----
+  const qrModal = document.getElementById('qrModal');
+  document.getElementById('showQrBtn').addEventListener('click', function(){
+    const url = encodeURIComponent(window.location.href);
+    document.getElementById('qrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${url}`;
+    qrModal.classList.remove('hidden');
+    qrModal.classList.add('flex');
+  });
+  function closeQr(){
+    qrModal.classList.add('hidden');
+    qrModal.classList.remove('flex');
+  }
+  document.getElementById('closeQrBtn').addEventListener('click', closeQr);
+  qrModal.addEventListener('click', function(e){
+    if(e.target === qrModal) closeQr();
+  });
+
+</script>
+</body>
+</html>
