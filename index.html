@@ -217,15 +217,15 @@
   //    쓰기 권한이 있는 fine-grained token을 쓰고, 행사가 끝나면 삭제하세요.
   // ============================================================
   const githubConfig = {
-    owner: "YOUR_GITHUB_USERNAME",
-    repo: "YOUR_REPO_NAME",
+    owner: "helen0130",
+    repo: "GUEST-BOOK",
     path: "messages.json",
     branch: "main",
-    token: "YOUR_TOKEN"
+    token: "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"
   };
 
   const isConfigured = githubConfig.token !== "YOUR_TOKEN";
-  const API_BASE = `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${githubConfig.path}`;
+  const API_BASE = `https://api.github.com/repos/${encodeURIComponent(githubConfig.owner)}/${encodeURIComponent(githubConfig.repo)}/contents/${encodeURIComponent(githubConfig.path)}`;
   const POLL_INTERVAL_MS = 20000; // 20초마다 새 메시지 확인 (ETag 사용, 변경 없으면 API 사용량 거의 0)
 
   if(!isConfigured){
